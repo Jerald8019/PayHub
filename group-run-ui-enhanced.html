@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>PayHub - Group Run & Validation v2024</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667aea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f5f5f5;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            background: #f5f5f5;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border-right: 1px solid #ddd;
+        }
+        
+        .tab:hover {
+            background: #e8e8e8;
+        }
+        
+        .tab.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        input[type="text"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .checkbox-group {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 6px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .checkbox-item:hover {
+            background: #f0f0ff;
+            transform: translateX(5px);
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+        
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            flex: 1;
+        }
+        
+        .checkbox-item .code {
+            font-weight: bold;
+            color: #667eea;
+            margin-right: 8px;
+        }
+        
+        .checkbox-item .description {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-secondary:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+            opacity: 0.6;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .results-area {
+            margin-top: 30px;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 200px;
+        }
+
+        .result-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .result-item.success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+
+        .result-item.running {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+
+        .result-item.warning {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+        }
+
+        .result-item.error {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+
+        .status-icon {
+            font-size: 20px;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .results-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .results-table th {
+            padding: 15px 10px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .results-table th:last-child {
+            border-right: none;
+        }
+
+        .results-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 13px;
+        }
+
+        .results-table tbody tr:hover {
+            background: #f5f5ff;
+        }
+
+        .results-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .status-pending {
+            color: #856404;
+            background-color: #fff3cd;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-fetching {
+            color: #004085;
+            background-color: #cce5ff;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-success {
+            color: #155724;
+            background-color: #d4edda;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-error {
+            color: #721c24;
+            background-color: #f8d7da;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge.passed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-badge.running {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-weight: 600;
+            text-shadow: 0 0 3px rgba(255,255,255,0.8);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .clickable-test-name {
+            color: #667eea;
+            cursor: pointer;
+            text-decoration: underline;
+            transition: color 0.3s;
+        }
+
+        .clickable-test-name:hover {
+            color: #764ba2;
+            font-weight: 600;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 900px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideDown 0.3s;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .close-modal {
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .close-modal:hover {
+            color: #f0f0f0;
+        }
+
+        .modal-body {
+            padding: 30px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .detail-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .detail-section h3 {
+            margin-top: 0;
+            color: #667eea;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .detail-row {
+            display: flex;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            width: 150px;
+            color: #555;
+        }
+
+        .detail-value {
+            flex: 1;
+            color: #333;
+            font-family: 'Courier New', monospace;
+        }
+
+        .output-box {
+            background: #2d2d2d;
+            color: #f0f0f0;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 PayHub - Group Run & Validation</h1>
+            <p>Automated Group Run Execution and Earning Code Validation</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('start-run')">Start Group Run</button>
+            <button class="tab" onclick="switchTab('validate')">SLFCAB Validations</button>
+        </div>
+
+        <!-- Tab 1: Start Group Run -->
+        <div id="start-run" class="tab-content active">
+            <h2>Start New Group Run</h2>
+
+            <div class="form-group">
+                <label>Environment</label>
+                <select id="startRunEnvironment">
+                    <option value="dev">Development</option>
+                    <option value="stage">Stage</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Calculation Set Group (15 groups)</label>
+                <select id="groupName" onchange="updateGroupId()">
+                    <option value="">-- Select a group --</option>
+                    <option value="AGRHBW - Pay Process" data-group-id="10">AGRHBW - Pay Process</option>
+                    <option value="AHSHBW - Pay Process" data-group-id="2">AHSHBW - Pay Process</option>
+                    <option value="DSGHRL - Pay Process" data-group-id="18">DSGHRL - Pay Process</option>
+                    <option value="DSGSAL - Pay Process" data-group-id="19">DSGSAL - Pay Process</option>
+                    <option value="DSMHRL - Pay Process" data-group-id="20">DSMHRL - Pay Process</option>
+                    <option value="ECMHBW - Pay Process" data-group-id="8">ECMHBW - Pay Process</option>
+                    <option value="KWFHBW - Pay Process" data-group-id="6">KWFHBW - Pay Process</option>
+                    <option value="KWFSBW - Pay Process" data-group-id="13">KWFSBW - Pay Process</option>
+                    <option value="RLFHBW - Pay Process" data-group-id="9">RLFHBW - Pay Process</option>
+                    <option value="RLFSBW - Pay Process" data-group-id="12">RLFSBW - Pay Process</option>
+                    <option value="SLFCAB - Pay Process" data-group-id="3">SLFCAB - Pay Process</option>
+                    <option value="SLFNSB - Pay Process" data-group-id="16">SLFNSB - Pay Process</option>
+                    <option value="SLFNVB - Pay Process" data-group-id="11">SLFNVB - Pay Process</option>
+                    <option value="SWFHBW - Pay Process" data-group-id="7">SWFHBW - Pay Process</option>
+                    <option value="SWFSBW - Pay Process" data-group-id="14">SWFSBW - Pay Process</option>
+                </select>
+                <input type="hidden" id="groupId" value="">
+            </div>
+
+            <div class="form-group">
+                <label>Pay Period Start</label>
+                <input type="date" id="payPeriodStart" onchange="autoFillPayPeriodEnd()">
+            </div>
+
+            <div class="form-group">
+                <label>Pay Period End</label>
+                <input type="date" id="payPeriodEnd">
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="correctionRun"> Correction Run
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="autoCancel"> Auto-Cancel After Completion
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="checkOnly"> Check Only (Don't Start Run)
+                </label>
+            </div>
+
+            <button class="btn-primary" onclick="startGroupRun()">🚀 Start Group Run</button>
+
+            <div id="run-results" class="results-area hidden">
+                <h3>Results</h3>
+                <div id="run-output"></div>
+            </div>
+        </div>
+
+        <!-- Tab 2: SLFCAB Validations -->
+        <div id="validate" class="tab-content">
+            <h2>SLFCAB Earning Code Validations</h2>
+
+            <div class="form-group">
+                <label>Select Run ID to Validate</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <select id="runIdDropdown" onchange="selectRunFromDropdown()" style="font-family: monospace; flex: 1;">
+                        <option value="">-- No runs loaded yet --</option>
+                    </select>
+                    <button type="button" onclick="refreshSuccessfulRuns(event)" class="btn-secondary" style="white-space: nowrap; padding: 8px 16px;">
+                        🔄 Load SLFCAB Runs
+                    </button>
+                </div>
+                <small id="refresh-status" style="color: #666; font-size: 12px; margin-top: 5px; display: block;">
+                    💡 Click "🔄 Load SLFCAB Runs" to fetch runs from PayHub
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label>Or Enter Custom Run ID</label>
+                <input type="text" id="runId" placeholder="e.g., 789fea8e-cf21-42bc-9f89-fe6750ae8666" value="" style="font-family: monospace;">
+                <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">
+                    💡 You can enter a full UUID or short form (first 8 characters).
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label>Environment</label>
+                <select id="environment">
+                    <option value="dev">DEV (people.dev.ashleyfurniture.com - Group ID: 3)</option>
+                    <option value="stage" selected>STAGE (people.stage.ashleyfurniture.com - Group ID: 10)</option>
+                </select>
+                <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">
+                    💡 Select the environment to run validations against
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label>Browser Mode</label>
+                <select id="browserMode">
+                    <option value="headless">Headless (Faster - No Browser Window)</option>
+                    <option value="headed">Headed (Show Browser - Slower)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Select Earning Codes to Validate</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="earningCode" id="code-dblpc" value="dblpc">
+                        <label for="code-dblpc">
+                            <span class="code">DBLPC</span>
+                            <span class="description">- Double Premium (3 validation scripts)</span>
+                        </label>
+                    </div>
+
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="earningCode" id="code-mealw" value="mealw">
+                        <label for="code-mealw">
+                            <span class="code">MEALW</span>
+                            <span class="description">- Meal Waiver (3 validation scripts)</span>
+                        </label>
+                    </div>
+
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="earningCode" id="code-wfmhours" value="wfmhours">
+                        <label for="code-wfmhours">
+                            <span class="code">WFM HOURS</span>
+                            <span class="description">- WFM Paycode Hours Sum Validation</span>
+                        </label>
+                    </div>
+
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="earningCode" id="code-ukgearnings" value="ukgearnings">
+                        <label for="code-ukgearnings">
+                            <span class="code">UKG EARNINGS</span>
+                            <span class="description">- All UKG Pro Earning Codes (CSV vs UI)</span>
+                        </label>
+                    </div>
+
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="earningCode" id="code-ovtpc" value="ovtpc">
+                        <label for="code-ovtpc">
+                            <span class="code">OVTPC</span>
+                            <span class="description">- Overtime Premium (Half-Rate)</span>
+                        </label>
+                    </div>
+
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="earningCode" id="code-regpc" value="regpc">
+                        <label for="code-regpc">
+                            <span class="code">REGPC</span>
+                            <span class="description">- Regular Pay (Average Rate)</span>
+                        </label>
+                    </div>
+
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="earningCode" id="code-rstbp" value="rstbp">
+                        <label for="code-rstbp">
+                            <span class="code">RSTBP</span>
+                            <span class="description">- Rest Break Pay (Average Rate)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-secondary" onclick="selectAllCodes()">Select All Available</button>
+                <button class="btn-secondary" onclick="clearAllCodes()">Clear All</button>
+                <button class="btn-success" onclick="validateSelectedCodes()">✅ Validate Selected Codes</button>
+            </div>
+
+            <div id="validation-results" class="results-area hidden">
+                <h3>Validation Results</h3>
+                <div class="progress-bar">
+                    <div id="validation-progress" class="progress-fill" style="width: 0%;">0%</div>
+                </div>
+                <div id="validation-output" style="margin-top: 20px;"></div>
+                <div class="button-group" style="margin-top: 20px;">
+                    <button class="btn-success" onclick="exportToJSON()">📥 Export as JSON</button>
+                    <button class="btn-success" onclick="exportToExcel()">📊 Export as Excel</button>
+                    <button class="btn-success" onclick="exportToText()">📝 Export as Text</button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script>
+        // Tab switching
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // ===== RUN ID MANAGEMENT =====
+
+        const RUN_ID_KEY = 'payhub_run_id_cache_dev';
+
+        function saveRunIdToCache(runId) {
+            localStorage.setItem(RUN_ID_KEY, runId);
+        }
+
+        function getRunIdFromCache() {
+            return localStorage.getItem(RUN_ID_KEY);
+        }
+
+        function selectRunFromDropdown() {
+            const dropdown = document.getElementById('runIdDropdown');
+            const runIdInput = document.getElementById('runId');
+
+            if (dropdown.value) {
+                runIdInput.value = dropdown.value;
+                saveRunIdToCache(dropdown.value);
+            }
+        }
+
+
+        async function refreshSuccessfulRuns(event) {
+            if (event) event.preventDefault();
+
+            const statusSpan = document.getElementById('refresh-status');
+            const dropdown = document.getElementById('runIdDropdown');
+            const envDropdown = document.getElementById('environment');
+
+            const selectedEnv = envDropdown ? envDropdown.value : 'dev';
+            const selectedGroup = 'SLFCAB';  // Always SLFCAB for this tab
+
+            // Extract environment name from the value
+            const env = selectedEnv.includes('stage') ? 'stage' : 'dev';
+            const envName = env.toUpperCase();
+
+            statusSpan.textContent = `⏳ Fetching fresh SLFCAB runs from PayHub ${envName}... (this may take 1-2 minutes)`;
+            statusSpan.style.color = '#2196F3';
+
+            // Disable button during fetch
+            const loadBtn = event.target;
+            loadBtn.disabled = true;
+            loadBtn.textContent = '⏳ Fetching...';
+
+            try {
+                // Fetch fresh runs from PayHub (not cached)
+                const response = await fetch('http://localhost:3002/api/fetch-slfcab-runs', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        environment: env
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to fetch runs');
+                }
+
+                const runs = result.runs;
+
+                if (runs && runs.length > 0) {
+                    // Sort runs: SUCCEEDED first, then FAILED
+                    const sortedRuns = runs.sort((a, b) => {
+                        if (a.status === 'SUCCEEDED' && b.status !== 'SUCCEEDED') return -1;
+                        if (a.status !== 'SUCCEEDED' && b.status === 'SUCCEEDED') return 1;
+                        return 0;
+                    });
+
+                    // Clear existing options
+                    dropdown.innerHTML = '';
+
+                    // Add ALL runs to dropdown (both SUCCEEDED and FAILED)
+                    sortedRuns.forEach(run => {
+                        const option = document.createElement('option');
+                        option.value = run.id;
+                        const displayId = run.shortId || run.id.substring(0, 8);
+                        const statusIcon = run.status === 'SUCCEEDED' ? '✅' : '❌';
+                        option.textContent = `${displayId} - ${statusIcon} ${run.status} - ${run.triggeredAt}`;
+
+                        // Style failed runs differently
+                        if (run.status === 'FAILED') {
+                            option.style.color = '#d32f2f';
+                            option.style.fontStyle = 'italic';
+                        }
+
+                        dropdown.appendChild(option);
+                    });
+
+                    // Auto-select first SUCCEEDED run, or first run if no succeeded
+                    const firstSucceeded = sortedRuns.find(r => r.status === 'SUCCEEDED');
+                    const firstRun = firstSucceeded || sortedRuns[0];
+
+                    if (firstRun) {
+                        dropdown.value = firstRun.id;
+                        document.getElementById('runId').value = firstRun.id;
+                        saveRunIdToCache(firstRun.id);
+                    }
+
+                    const succeededCount = runs.filter(r => r.status === 'SUCCEEDED').length;
+                    const failedCount = runs.filter(r => r.status === 'FAILED').length;
+                    statusSpan.textContent = `✅ Fetched ${runs.length} runs from ${envName} (${succeededCount} succeeded, ${failedCount} failed)`;
+                    statusSpan.style.color = '#4CAF50';
+                } else {
+                    statusSpan.textContent = '⚠️ No runs found in PayHub';
+                    statusSpan.style.color = '#FF9800';
+                }
+            } catch (error) {
+                statusSpan.textContent = `❌ Error: ${error.message}`;
+                statusSpan.style.color = '#f44336';
+                console.error('Error fetching runs:', error);
+            } finally {
+                // Re-enable button
+                loadBtn.disabled = false;
+                loadBtn.textContent = '🔄 Load Runs';
+            }
+        }
+
+        // ===== EARNING CODE VALIDATION FUNCTIONS =====
+
+        function selectAllCodes() {
+            document.querySelectorAll('input[name="earningCode"]').forEach(cb => {
+                cb.checked = true;
+            });
+        }
+
+        function clearAllCodes() {
+            document.querySelectorAll('input[name="earningCode"]').forEach(cb => {
+                cb.checked = false;
+            });
+        }
+
+        async function validateSelectedCodes() {
+            const runId = document.getElementById('runId').value;
+            const environment = document.getElementById('environment').value;
+            const headed = document.getElementById('browserMode').value === 'headed';
+
+            if (!runId) {
+                alert('Please enter or select a Run ID first!');
+                return;
+            }
+
+            // Get selected codes
+            const selectedCodes = Array.from(document.querySelectorAll('input[name="earningCode"]:checked'))
+                .map(cb => cb.value);
+
+            if (selectedCodes.length === 0) {
+                alert('Please select at least one earning code to validate!');
+                return;
+            }
+
+            console.log('Validating codes:', selectedCodes);
+            console.log('Run ID:', runId);
+            console.log('Environment:', environment);
+
+            // Show results area
+            const resultsArea = document.getElementById('validation-results');
+            resultsArea.classList.remove('hidden');
+
+            const progressBar = document.getElementById('validation-progress');
+            const outputDiv = document.getElementById('validation-output');
+
+            outputDiv.innerHTML = '<p>Starting validation...</p>';
+            progressBar.style.width = '0%';
+            progressBar.textContent = '0%';
+
+            const results = [];
+            let completed = 0;
+
+            // Calculate total number of scripts to run
+            let totalScripts = 0;
+            for (const code of selectedCodes) {
+                const scripts = getScriptsForCode(code);
+                totalScripts += scripts.length;
+            }
+
+            console.log(`Total scripts to run: ${totalScripts}`);
+
+            for (const code of selectedCodes) {
+                const scripts = getScriptsForCode(code);
+
+                if (scripts.length === 0) {
+                    outputDiv.innerHTML += `<p>⚠️ No validation scripts found for ${code.toUpperCase()}</p>`;
+                    continue;
+                }
+
+                for (const script of scripts) {
+                    try {
+                        outputDiv.innerHTML += `<p>🔄 Running: ${script}...</p>`;
+                        // Scroll to bottom
+                        outputDiv.scrollTop = outputDiv.scrollHeight;
+
+                        const response = await fetch('http://localhost:3002/api/validate-script', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                scriptFile: script,
+                                headed: headed,
+                                runId: runId,
+                                environment: environment
+                            })
+                        });
+
+                        const result = await response.json();
+                        results.push({ script, ...result });
+
+                        completed++;
+                        const progress = Math.round((completed / totalScripts) * 100);
+                        progressBar.style.width = progress + '%';
+                        progressBar.textContent = progress + '%';
+
+                        const icon = result.success ? '✅' : '❌';
+                        const status = result.success ? 'PASSED' : 'FAILED';
+                        outputDiv.innerHTML += `<p>${icon} ${script}: ${status}</p>`;
+                        // Scroll to bottom
+                        outputDiv.scrollTop = outputDiv.scrollHeight;
+
+                    } catch (error) {
+                        outputDiv.innerHTML += `<p>❌ Error running ${script}: ${error.message}</p>`;
+                        completed++;
+                        const progress = Math.round((completed / totalScripts) * 100);
+                        progressBar.style.width = progress + '%';
+                        progressBar.textContent = progress + '%';
+                    }
+                }
+            }
+
+            outputDiv.innerHTML += '<p><strong>✅ Validation complete!</strong></p>';
+            outputDiv.scrollTop = outputDiv.scrollHeight;
+        }
+
+        function getScriptsForCode(code) {
+            const scriptMap = {
+                'dblpc': ['slfcab-dblpc-1-totals.spec.ts', 'slfcab-dblpc-2-avgrate.spec.ts', 'slfcab-dblpc-3-daily.spec.ts'],
+                'mealw': ['slfcab-mealw-1-totals.spec.ts', 'slfcab-mealw-2-avgrate.spec.ts', 'slfcab-mealw-3-daily.spec.ts'],
+                'wfmhours': ['slfcab-wfm-hours-validation.spec.ts'],
+                'ukgearnings': ['slfcab-ukg-earnings-validation.spec.ts'],
+                'ovtpc': ['slfcab-ovtpc-1-totals.spec.ts', 'slfcab-ovtpc-2-avgrate.spec.ts', 'slfcab-ovtpc-3-daily.spec.ts'],
+                'regpc': ['slfcab-regpc-1-totals.spec.ts', 'slfcab-regpc-2-avgrate.spec.ts', 'slfcab-regpc-3-daily.spec.ts'],
+                'rstbp': ['slfcab-rstbp-1-totals.spec.ts', 'slfcab-rstbp-2-avgrate.spec.ts', 'slfcab-rstbp-3-daily.spec.ts']
+            };
+
+            return scriptMap[code.toLowerCase()] || [];
+        }
+
+        function exportToJSON() {
+            // Export validation results
+            alert('Export functionality coming soon!');
+        }
+
+
+    </script>
+</body>
+</html>

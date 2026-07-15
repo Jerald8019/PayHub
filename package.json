@@ -1,0 +1,30 @@
+{
+  "name": "playwright-new",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:ui": "npx playwright test --ui",
+    "test:debug": "npx playwright test --debug",
+    "report": "npx playwright show-report",
+    "generate:test": "node scripts/generate-test.js",
+    "generate:interactive": "node scripts/test-generator-interactive.js",
+    "generate:jira": "node scripts/jira-test-generator.js",
+    "ui": "node server-validation.js",
+    "start": "node server-validation.js",
+    "ui:old": "node ui/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.0.1",
+    "dotenv": "^17.2.4"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  }
+}
